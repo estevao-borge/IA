@@ -1,6 +1,7 @@
 # IA
 
-1º Criar um estado INITIAL a partir da configuração inicial.
+#Script
+1º Criar um estado INITIAL(1º elemento) e GOAL(2º elemento) a partir da configuração inicial.
 2° Criar uma fila com prioridade ABERTOS para estados não testados (Prioridade tem relação com o menor custo).
 3° Criar uma lista FECHADOS para estados já testados.
 4º Inserir o estado INITIAL em ABERTOS.
@@ -16,3 +17,8 @@
     - Para cada SUCESSOR em SUCESSORES.
       - Se SUCESSOR não existir em FECHADOS.
         - Inserir SUCESSOR em ABERTOS.
+        
+#Observações
+- Preparar uma implementação do algoritmo de forma bem geral, para que possa ser usado em qualquer tipo de problema. Pode ser resolvido definindo uma classe para resolver cada tipo de problema.
+- Criar uma classe Node onde terá os seguintes argumentos: CONFIG(sua respetiva configuração), COST(o seu custo, que é o custo do pai +1) e REFERENCE(a referência para o próprio pai, o pai do estado inicial é null).
+- Estados que se encontram nas diagonais possuem no máximo 2 filhos. Estados que se encontram entre diagonais possuem no máximo 3 filhos. Estados que se encontram no meio possuem no máximo 4 filhos.
