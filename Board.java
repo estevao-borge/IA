@@ -1,3 +1,6 @@
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 interface Ilayout 
@@ -41,23 +44,87 @@ class Board implements Ilayout, Cloneable
 	
 	public String toString() 
 	{
-		// TO BE COMPLETED
+		StringWriter writer = new StringWriter();
+		PrintWriter pw = new PrintWriter(writer);
+		for(int i = 0; i < dim; i++) 
+		{
+			for(int j = 0; j < dim; j++) 
+			{
+				if(board[i][j] == 0)
+					pw.print(" ");
+				else
+					pw.print(board[i][j]);
+			}
+			pw.println();
+		}
+		System.out.println(writer.toString());
+		return writer.toString();
 	}
 
 	@Override
-	public List<Ilayout> children() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Ilayout> children() 
+	{
+		List<Ilayout> sucs = new ArrayList<>();
+		for (int i = 0; i < dim; i++) 
+		{
+			for (int j = 0; j < dim; j++) 
+			{
+				if(board[i][j] == 0) 
+				{
+					//ESQUERDA
+					if(i > 0) 
+					{
+						int[][] cpy = board.clone();
+						cpy[i][j] = board[i-1][j];
+						cpy[i-1][j] = 0;
+						Ilayout x = new Board(cpy.toString());
+						sucs.add(x);
+					}
+
+					//CIMA
+					if(j > 0) 
+					{
+						int[][] cpy = board.clone();
+						cpy[i][j] = board[i][j-1];
+						cpy[i][j-1] = 0;
+						Ilayout x = new Board(cpy.toString());
+						sucs.add(x);
+					}
+					
+					//DIREITA
+					if(j < 2) 
+					{
+						int[][] cpy = board.clone();
+						cpy[i][j] = board[i+1][j];
+						cpy[i+1][j] = 0;
+						Ilayout x = new Board(cpy.toString());
+						sucs.add(x);
+					}
+					
+					//BAIXO
+					if(i < 2) 
+					{
+						int[][] cpy = board.clone();
+						cpy[i][j] = board[i][j+1];
+						cpy[i][j+1] = 0;
+						Ilayout x = new Board(cpy.toString());
+						sucs.add(x);
+					}
+				}
+			}
+		}
+		return sucs;
 	}
 
 	@Override
-	public boolean isGoal(Ilayout l) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isGoal(Ilayout l) 
+	{
+		return board.toString().contentEquals(l.toString());
 	}
 
 	@Override
-	public double getG() {
+	public double getG() 
+	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
