@@ -61,6 +61,11 @@ public class BestFirst
 		List<State> fechados = new ArrayList<>();
 		abertos.add(new State(s, null)); 
 		List<State> sucs;
-		// TO BE COMPLETED
+		while(true)
+		{
+			if(abertos.isEmpty())
+				return null;
+			
+		}
 	}
 }
