@@ -31,7 +31,6 @@ public class BestFirst
 		{
 			return g;
 		}
-		
 	}
 	
 	protected Queue<State> abertos; 
@@ -65,7 +64,13 @@ public class BestFirst
 		{
 			if(abertos.isEmpty())
 				return null;
-			
+			State actual = abertos.poll();
+			if(actual.equals(goal)) 
+				return fechados.iterator(); //METER TUDO EM UMA STACK
+			else
+			{
+				sucs = sucessores(actual);
+			}
 		}
 	}
 }
