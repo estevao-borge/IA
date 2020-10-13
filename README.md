@@ -10,7 +10,7 @@
   7º Estado ACTUAL = 1º da fila ABERTOS.
   8º Remover ACTUAL de ABERTOS.
   9º Se a configuração do estado ACTUAL for igual à configuração GOAL.
-    - Mostrar a sequência desde INITIAL até GOAL.
+    - Mostrar a sequência desde INITIAL até GOAL (mete em uma stack dos filhos aos pais e depois printa).
   10° Senão.
     - SUCESSORES = todos os filhos do estado ACTUAL.
     - Inserir ACTUAL na lista FECHADOS.
