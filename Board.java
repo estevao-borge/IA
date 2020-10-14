@@ -125,7 +125,6 @@ class Board implements Ilayout, Cloneable
 	@Override
 	public double getG() 
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 }
