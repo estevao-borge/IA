@@ -31,6 +31,11 @@ class Board implements Ilayout, Cloneable
 	{ 
 		board = new int[dim][dim]; 
 	}
+	
+	public Board(int b[][]) 
+	{
+		board = b;
+	}
 		
 	public Board(String str) throws IllegalStateException
 	{ 	
@@ -57,8 +62,20 @@ class Board implements Ilayout, Cloneable
 			}
 			pw.println();
 		}
-		System.out.println(writer.toString());
 		return writer.toString();
+	}
+	
+	private int[][] contentTransfer()
+	{
+		int[][] clone = new int[dim][dim]; 
+		for (int i = 0; i < dim; i++) 
+		{
+			for (int j = 0; j < dim; j++) 
+			{
+				clone[i][j] = board[i][j];
+			}
+		}	
+		return clone;
 	}
 
 	@Override
@@ -71,47 +88,52 @@ class Board implements Ilayout, Cloneable
 			{
 				if(board[i][j] == 0) 
 				{
-					//ESQUERDA
+					//MOVER 0 PARA ESQUERDA
 					if(i > 0) 
 					{
-						int[][] cpy = board.clone();
+						int[][] cpy = contentTransfer(); 
 						cpy[i][j] = board[i-1][j];
 						cpy[i-1][j] = 0;
-						Ilayout x = new Board(cpy.toString());
+						Ilayout x = new Board(cpy);
 						sucs.add(x);
 					}
 
-					//CIMA
+					//MOVER 0 PARA CIMA
 					if(j > 0) 
 					{
-						int[][] cpy = board.clone();
+						int[][] cpy = contentTransfer(); 
 						cpy[i][j] = board[i][j-1];
 						cpy[i][j-1] = 0;
-						Ilayout x = new Board(cpy.toString());
+						Ilayout x = new Board(cpy);
 						sucs.add(x);
 					}
 					
-					//DIREITA
+					//MOVER 0 PARA DIREITA
 					if(j < 2) 
 					{
-						int[][] cpy = board.clone();
+						int[][] cpy = contentTransfer(); 
 						cpy[i][j] = board[i+1][j];
 						cpy[i+1][j] = 0;
-						Ilayout x = new Board(cpy.toString());
+						Ilayout x = new Board(cpy);
 						sucs.add(x);
 					}
 					
-					//BAIXO
+					//MOVER 0 PARA BAIXO
 					if(i < 2) 
 					{
-						int[][] cpy = board.clone();
+						int[][] cpy = contentTransfer(); 
 						cpy[i][j] = board[i][j+1];
 						cpy[i][j+1] = 0;
-						Ilayout x = new Board(cpy.toString());
+						Ilayout x = new Board(cpy);
 						sucs.add(x);
 					}
 				}
 			}
+		}
+		System.out.println("Filhos");
+		for(Ilayout e : sucs) 
+		{
+			System.out.println(e.toString());
 		}
 		return sucs;
 	}
