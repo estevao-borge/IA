@@ -55,22 +55,38 @@ public class BestFirst
 	
 	final public Iterator<State> solve(Ilayout s, Ilayout goal) 
 	{ 
-		objective = goal;
-		Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getG() - s2.getG())); 
-		List<State> fechados = new ArrayList<>();
-		abertos.add(new State(s, null)); 
 		List<State> sucs;
+		objective = goal;
+		abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getG() - s2.getG())); 
+		fechados = new ArrayList<>();
+		abertos.add(new State(s, null)); 
+		
 		while(true)
 		{
 			if(abertos.isEmpty())
-				return null;
-			State actual = abertos.poll();
-			if(actual.equals(goal)) 
-				return fechados.iterator(); //METER TUDO EM UMA STACK
-			else
+			{
+				IllegalArgumentException err = new IllegalArgumentException("You must insert a initial configuration!");
+				System.out.println(err.getMessage());
+				System.exit(0);
+			}
+			
+			actual = abertos.poll();
+			if(actual.layout.isGoal(objective)) 
+			{
+				fechados.add(abertos.poll());
+				return fechados.iterator();
+			}
+			else 
 			{
 				sucs = sucessores(actual);
+				fechados.add(actual);
+				for(State state : sucs) 
+				{
+					if(!fechados.contains(state))
+						abertos.add(state);
+				}
 			}
+			System.out.println("yau");
 		}
 	}
 }
