@@ -7,31 +7,34 @@ interface Ilayout
 { 
 	/**
 	@return the children of the receiver. 
-	 */
+	*/
 	List<Ilayout> children();
-
+		
 	/**
 	@return true if the receiver equals the argument l;
 	@return false otherwise.
-	 */
+	*/
 	boolean isGoal(Ilayout l);
-
+		
 	/**
 	@return the cost for moving from the input config to the receiver.
-	 */
+	*/
 	double getG();
 }
-
+	
 class Board implements Ilayout, Cloneable 
 { 		
 	private static final int dim = 3;
 	private int board[][];
-
+		
 	public Board() 
 	{ 
 		board = new int[dim][dim]; 
 	}
-
+	public Board(int b[][]) {
+		board = b;
+	}
+		
 	public Board(String str) throws IllegalStateException
 	{ 	
 		if (str.length() != dim*dim) throw new IllegalStateException("Invalid arg in Board constructor"); 
@@ -41,11 +44,11 @@ class Board implements Ilayout, Cloneable
 			for(int j = 0; j < dim; j++)
 				board[i][j] = Character.getNumericValue(str.charAt(si++));
 	}
-
-	public String toString() {
+	
+	public String toString() 
+	{
 		StringWriter writer = new StringWriter();
 		PrintWriter pw = new PrintWriter(writer);
-
 		for(int i = 0; i < dim; i++) {
 			for(int j = 0; j < dim; j++) {
 				if(board[i][j] == 0)
@@ -55,54 +58,89 @@ class Board implements Ilayout, Cloneable
 			}
 			pw.println();
 		}
-		System.out.println(writer.toString());
 		return writer.toString();
-
 	}
 
-
-
-
-	@Override
-	public List<Ilayout> children() {
-
-		List<Ilayout> sucs = new ArrayList<>();
+	private int[][] contentTransfer(){
+		int[][] clone = new int[dim][dim]; 
 		for (int i = 0; i < dim; i++) {
 			for (int j = 0; j < dim; j++) {
-				if(board[i][j] == 0) {
-					if(i > 0) {
-						int[][] cpy = board.clone();
+				clone[i][j] = board[i][j];
+			}
+		}
+		
+		return clone;
+	}
+	
+	
+	@Override
+	public List<Ilayout> children() 
+	{
+	
+		List<Ilayout> sucs = new ArrayList<>();
+		for (int i = 0; i < dim; i++) 
+		{
+			for (int j = 0; j < dim; j++) 
+			{
+				if(board[i][j] == 0) 
+				{
+					//Mover 0 para cima
+					if(i > 0) 
+					{
+						int[][] cpy = contentTransfer(); 
 						cpy[i][j] = board[i-1][j];
 						cpy[i-1][j] = 0;
-						Ilayout x = new Board(cpy.toString());
+						Ilayout x = new Board(cpy);
 						sucs.add(x);
 					}
 
-					//esquerda
-					if(j > 0) {
-
+					//Mover 0 para esquerda
+					if(j > 0) 
+					{
+						int[][] cpy = contentTransfer(); 
+						cpy[i][j] = board[i][j-1];
+						cpy[i][j-1] = 0;
+						Ilayout x = new Board(cpy);
+						sucs.add(x);
 					}
-					//direita
-					if(j < 2) {
-
+					
+					//Mover 0 para a direita
+					if(j < 2) 
+					{
+						int[][] cpy = contentTransfer(); 
+						cpy[i][j] = board[i][j+1];
+						cpy[i][j+1] = 0;
+						Ilayout x = new Board(cpy);
+						sucs.add(x);
 					}
-					//baixo
-					if(i < 2) {
-
+					
+					//Mover Peça para baixo
+					if(i < 2) 
+					{
+						int[][] cpy = contentTransfer(); 
+						cpy[i][j] = board[i+1][j];
+						cpy[i+1][j] = 0;
+						Ilayout x = new Board(cpy);
+						sucs.add(x);
 					}
 				}
 			}
 		}
+		System.out.println("filhos");
+		for(Ilayout e : sucs) {
+			System.out.println(e.toString());
+		}
+		return sucs;
 	}
 
 	@Override
 	public boolean isGoal(Ilayout l) {
-		return board.toString().contentEquals(l.toString()); 
+		return toString().contentEquals(l.toString());
 	}
 
 	@Override
-	public double getG() {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getG() 
+	{
+		return 1;
 	}
 }

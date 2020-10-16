@@ -58,28 +58,42 @@ public class BestFirst
 	{ 
 		objective = goal;
 		Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getG() - s2.getG())); 
-		List<State> fechados = new ArrayList<>();
-		abertos.add(new State(s, null)); 
-		State actual = abertos.poll();
+		List<State> fechados = new ArrayList<>();		
 		List<State> sucs;
 		
-		while(true) {
-			try {
-				if(abertos.isEmpty()) System.exit(0);
-				if(actual.equals(goal)) return fechados.iterator();
-				
-				else {
-					sucs = sucessores(actual);
-					
-				}
-				
-			}catch{
-				
-			}
+		abertos.add(new State(s, null)); 
+		
+		//First Stop condition
+		if(s.isGoal(objective)) {
+			fechados.add(abertos.poll());
+			return fechados.iterator();
 		}
 		
+		while(!s.isGoal(objective)) {
+			if(abertos.isEmpty()) {
+				IllegalArgumentException err = new IllegalArgumentException("You must insert a initial configuration!");
+				System.out.println(err.getMessage());
+				System.exit(0);
+			}
+			
+			actual = abertos.poll();
+			if(actual.layout.isGoal(objective)) {
+				break;
+			}
+			else {
+				sucs = sucessores(actual);
+				fechados.add(actual);
+				for(State state : sucs) {
+					if(!fechados.contains(state)) {
+						abertos.add(state);
+					}
+				}
+			}
+			System.out.println("yau");
+		}
 		
+		fechados.add(actual);
 		
-		
+		return fechados.iterator();
 	}
 }
