@@ -1,8 +1,11 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Stack;
 
 public class BestFirst 
 {
@@ -11,7 +14,7 @@ public class BestFirst
 		private Ilayout layout;
 		private State father;
 		private double g;
-		
+
 		public State(Ilayout l, State n) 
 		{
 			layout = l; 
@@ -21,24 +24,24 @@ public class BestFirst
 			else 
 				g = 0.0;
 		}
-		
+
 		public String toString() 
 		{ 
 			return layout.toString(); 
 		} 
-		
+
 		public double getG() 
 		{
 			return g;
 		}
-		
+
 	}
-	
+
 	protected Queue<State> abertos; 
-	private List<State> fechados; 
+	private Hashtable<State, Double> fechados; 
 	private State actual;
 	private Ilayout objective;
-	
+
 	final private List<State> sucessores(State n) 
 	{ 
 		List<State> sucs = new ArrayList<>(); 
@@ -53,47 +56,55 @@ public class BestFirst
 		}
 		return sucs; 
 	}
-	
+
 	final public Iterator<State> solve(Ilayout s, Ilayout goal) 
 	{ 
 		objective = goal;
-		Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getG() - s2.getG())); 
-		List<State> fechados = new ArrayList<>();		
+		abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getG() - s2.getG())); 
+		fechados = new Hashtable<>();		
+
 		List<State> sucs;
-		
+		Stack<State> result = new Stack<>();
+
 		abertos.add(new State(s, null)); 
 		
-		//First Stop condition
-		if(s.isGoal(objective)) {
-			fechados.add(abertos.poll());
-			return fechados.iterator();
-		}
 		
-		while(!s.isGoal(objective)) {
+		while(true) {
+	
 			if(abertos.isEmpty()) {
 				IllegalArgumentException err = new IllegalArgumentException("You must insert a initial configuration!");
 				System.out.println(err.getMessage());
 				System.exit(0);
 			}
-			
+
 			actual = abertos.poll();
 			if(actual.layout.isGoal(objective)) {
 				break;
 			}
 			else {
 				sucs = sucessores(actual);
-				fechados.add(actual);
+				fechados.put(actual, actual.g);
+				
 				for(State state : sucs) {
-					if(!fechados.contains(state)) {
+					if(!fechados.containsKey(state)) {
+
 						abertos.add(state);
 					}
 				}
 			}
-			System.out.println("yau");
+
 		}
 		
-		fechados.add(actual);
+		fechados.put(actual, actual.g);
 		
-		return fechados.iterator();
+		while(actual.father != null) {
+			State filho = actual;
+			result.push(filho);
+			actual = actual.father;
+		}
+		
+		Collections.reverse(result);
+		return result.iterator();
+
 	}
 }

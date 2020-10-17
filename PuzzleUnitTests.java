@@ -5,8 +5,6 @@ import java.io.StringWriter;
 
 public class PuzzleUnitTests 
 {
-	
-	// ==================== CLASS Board ======================
 	@Test
 	public void testConstructor1() 
 	{
@@ -34,30 +32,20 @@ public class PuzzleUnitTests
 	}
 	
 	@Test
-	public void testToString() {
+	public void testToString() 
+	{
 		
 	}
 	
-	
-	
 	@Test
-	public void testIsGoal() {
+	public void testIsGoal() 
+	{
 		Ilayout a = new Board("123456780");
 		Ilayout a1 = new Board("123456780");
 		Ilayout a2 = new Board("103123789");
 		
 		assertEquals(a.isGoal(a1), true);
 		assertEquals(a.isGoal(a2), false);
-		assertEquals(a1.isGoal(a2), false);
-		
-		
-		
+		assertEquals(a1.isGoal(a2), false);	
 	}
-	
-
-	
-	
-	
-	
-	
 }
